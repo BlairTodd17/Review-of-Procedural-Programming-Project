@@ -72,3 +72,4 @@ void displayResults(const string names[], const double scores[][NUM_TESTS], cons
         cout << setw(10) << averages[i] << grades[i] << endl;
     }
 }
+//hi this too WAY TOO LONG. I found out I put ISTREAM instead of IOSTREAM.
