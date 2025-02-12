@@ -1,74 +1,74 @@
 #include <iostream>
-#include <cstdlib>
-#include <ctime>
-
+#include <iomanip>
+#include <string>
 using namespace std;
 
-void displayMenu();
-int getPlayerChoice();
-int getComputerChoice();
-void determineWinner(int player, int computer);
-string choiceToString(int choice);
+const int NUM_STUDENTS = 5;
+const int NUM_TESTS = 3;
+
+void getStudentData(string names[], double scores[][NUM_TESTS]);
+void calculateAverages(const double scores[][NUM_TESTS], double averages[]);
+void assignGrades(const double averages[], char grades[]);
+void displayResults(const string names[], const double scores[][NUM_TESTS], const double averages[], const char grades[]);
 
 int main() {
-    srand(time(0));
-    char playAgain;
+    string names[NUM_STUDENTS];
+    double scores[NUM_STUDENTS][NUM_TESTS];
+    double averages[NUM_STUDENTS];
+    char grades[NUM_STUDENTS];
 
-    do {
-        displayMenu();
-        int playerChoice = getPlayerChoice();
-        int computerChoice = getComputerChoice();
+    getStudentData(names, scores);
+    calculateAverages(scores, averages);
+    assignGrades(averages, grades);
+    displayResults(names, scores, averages, grades);
 
-        cout << "You chose: " << choiceToString(playerChoice) << endl;
-        cout << "Computer chose: " << choiceToString(computerChoice) << endl;
-
-        determineWinner(playerChoice, computerChoice);
-
-        cout << "Do you want to play again? (y/n): ";
-        cin >> playAgain;
-    } while (tolower(playAgain) == 'y');
-
-    cout << "Thanks for playing!" << endl;
     return 0;
 }
 
-void displayMenu() {
-    cout << "\nRock, Paper, Scissors Game" << endl;
-    cout << "1. Rock" << endl;
-    cout << "2. Paper" << endl;
-    cout << "3. Scissors" << endl;
-}
-
-int getPlayerChoice() {
-    int choice;
-    do {
-        cout << "Enter your choice (1-3): ";
-        cin >> choice;
-    } while (choice < 1 || choice > 3);
-    return choice;
-}
-
-int getComputerChoice() {
-    return rand() % 3 + 1;
-}
-
-void determineWinner(int player, int computer) {
-    if (player == computer) {
-        cout << "It's a tie!" << endl;
-    }
-    else if ((player == 1 && computer == 3) || (player == 2 && computer == 1) || (player == 3 && computer == 2)) {
-        cout << "You win!" << endl;
-    }
-    else {
-        cout << "Computer wins!" << endl;
+void getStudentData(string names[], double scores[][NUM_TESTS]) {
+    for (int i = 0; i < NUM_STUDENTS; i++) {
+        cout << "Enter name for student " << (i + 1) << ": ";
+        cin >> names[i];
+        for (int j = 0; j < NUM_TESTS; j++) {
+            cout << "Enter score for test " << (j + 1) << ": ";
+            cin >> scores[i][j];
+        }
     }
 }
 
-string choiceToString(int choice) {
-    switch (choice) {
-    case 1: return "Rock";
-    case 2: return "Paper";
-    case 3: return "Scissors";
-    default: return "Invalid";
+void calculateAverages(const double scores[][NUM_TESTS], double averages[]) {
+    for (int i = 0; i < NUM_STUDENTS; i++) {
+        double total = 0;
+        for (int j = 0; j < NUM_TESTS; j++) {
+            total += scores[i][j];
+        }
+        averages[i] = total / NUM_TESTS;
+    }
+}
+
+void assignGrades(const double averages[], char grades[]) {
+    for (int i = 0; i < NUM_STUDENTS; i++) {
+        if (averages[i] >= 90) grades[i] = 'A';
+        else if (averages[i] >= 80) grades[i] = 'B';
+        else if (averages[i] >= 70) grades[i] = 'C';
+        else if (averages[i] >= 60) grades[i] = 'D';
+        else grades[i] = 'F';
+    }
+}
+
+void displayResults(const string names[], const double scores[][NUM_TESTS], const double averages[], const char grades[]) {
+    cout << "\nGrade Book Results:\n";
+    cout << left << setw(10) << "Name";
+    for (int i = 0; i < NUM_TESTS; i++) {
+        cout << setw(8) << ("Test " + to_string(i + 1));
+    }
+    cout << setw(10) << "Average" << "Grade" << endl;
+
+    for (int i = 0; i < NUM_STUDENTS; i++) {
+        cout << left << setw(10) << names[i];
+        for (int j = 0; j < NUM_TESTS; j++) {
+            cout << setw(8) << scores[i][j];
+        }
+        cout << setw(10) << averages[i] << grades[i] << endl;
     }
 }
